@@ -76,11 +76,52 @@ module M216A_TopModule(
 
     localparam MAX_WIDTH = 128;
     localparam MAX_HEIGHT = 128;
+    localparam CYCLES_PER_PROGRAM = 4;
+
+    reg [2:0] counter; // counts from 1 to CYCLES_PER_PROGRAM
+    wire valid_program = (width_i > 0) && (height_i > 0);
+
+    always @(posedge clk_i) begin
+        if(rst_i) begin
+            counter <= 2'd0;
+        end else if (valid_program) begin
+            counter <= (counter >= CYCLES_PER_PROGRAM - 1) ? 0 : counter + 1; // count from 0 to (CYCLES_PER_PROGRAM - 1)
+        end
+    end
+
+    // register inputs
+    reg [4:0] width_i_reg;
+    reg [4:0] height_i_reg;
+
+    always @(posedge clk_i) begin
+        if(rst_i) begin
+            width_i_reg <= 5'b0;
+            height_i_reg <= 5'b0;
+        end else if (counter == 0) begin
+            width_i_reg <= width_i;
+            height_i_reg <= height_i;
+        end
+    end
 
     // register outputs
     reg [7:0] index_x_o_reg;
     reg [7:0] index_y_o_reg;
     reg [3:0] strike_o_reg;
+    assign index_x_o = index_x_o_reg;
+    assign index_y_o = index_y_o_reg;
+    assign strike_o = strike_o_reg;
+
+    always @(posedge clk_i) begin
+        if(rst_i) begin
+            index_x_o_reg <= 8'b0;
+            index_y_o_reg <= 8'b0;
+            strike_o_reg <= 4'b0;
+        end else begin
+            strike_o_reg <= strike_o_reg + 1;
+            index_x_o_reg <= MAX_WIDTH;
+            index_y_o_reg <= MAX_HEIGHT;
+        end
+    end
 
     // create an array to track strip widths
     reg [7:0] strip_widths [12:0]; // 8 bits required to encode width in range [0,128], total 13 width registers
@@ -90,46 +131,48 @@ module M216A_TopModule(
     wire [3:0] zstrip_id_h0 = strip_id_h0 - 1; // 4 bits to encode zero-indexed strip ID (zstrip_id) in range [0,12]
     wire [3:0] zstrip_id_h1 = strip_id_h1 - 1; // 4 bits to encode zero-indexed strip ID (zstrip_id) in range [0,12]
 
-    // map height y to strip ID
+    // map height h to strip ID
     height_to_id hti_0 (
-        .program_height_i(height_i),
+        .program_height_i(height_i_reg),
         .strip_id_o(strip_id_h0)
     );
-    // map height y+1 to strip ID
+    // map height h+1 to strip ID
     height_to_id hti_1 (
-        .program_height_i(height_i + 5'b1),
+        .program_height_i(height_i_reg + 5'b1),
         .strip_id_o(strip_id_h1)
     );
 
     // [TODO] compare widths of allowed strips and choose best one
-    wire [7:0] occupied_width_h0 = strip_widths[zstrip_id_h0];
-    wire [7:0] occupied_width_h1 = strip_widths[zstrip_id_h1];
-    wire [7:0] least_occupied_strip = (occupied_width_h0 <= occupied_width_h1) ? strip_id_h0 : strip_id_h1;
+    reg [7:0] occupied_width_h0;
+    reg [7:0] occupied_width_h1;
+    wire [3:0] least_occupied_strip = (occupied_width_h0 <= occupied_width_h1) ? strip_id_h0 : strip_id_h1;
     wire [3:0] least_occupied_zstrip = least_occupied_strip - 1; // 4 bits to encode zero-indexed strip ID (zstrip_id) in range [0,12]
+    wire [7:0] occupied_width = strip_widths[least_occupied_zstrip];
 
-    always @(posedge clk_i)
+    // register strips for comparison
+    always @(posedge clk_i) begin
+        if(rst_i) begin
+            occupied_width_h0 <= 4'b0;
+            occupied_width_h1 <= 4'b0;
+        end else if (counter == 1) begin
+            occupied_width_h0 <= strip_widths[zstrip_id_h0];
+            occupied_width_h1 <= strip_widths[zstrip_id_h1];
+        end
+    end
+
+    // strip width logic
+    wire place_program = (occupied_width + width_i_reg) <= MAX_WIDTH && (counter == 2);
+
+    always @(posedge clk_i) begin
         if(rst_i) begin
             for (integer i = 0; i < 13; i=i+1) begin
                 strip_widths[i] <= 8'b0;
             end
-        end else begin
-            strip_widths[least_occupied_zstrip] <= strip_widths[least_occupied_zstrip] + width_i;
+        end else if (place_program) begin
+            strip_widths[least_occupied_zstrip] <= strip_widths[least_occupied_zstrip] + width_i_reg;
+            // compute output index
         end
-
-    always @(posedge clk_i)
-        if(rst_i) begin
-            index_x_o_reg <= 8'b0;
-            index_y_o_reg <= 8'b0;
-            strike_o_reg <= 4'b0;
-        end else begin
-            index_x_o_reg <= 8'b0;
-            index_y_o_reg <= 8'b0;
-            strike_o_reg <= 4'b0;
-        end
-
-    assign index_x_o = index_x_o_reg;
-    assign index_y_o = index_y_o_reg;
-    assign strike_o = strike_o_reg;
+    end
 
 endmodule
 
@@ -146,7 +189,10 @@ module height_to_id (
         end else if ((4 <= program_height_i) && (program_height_i <= 7)) begin // heights 4~7
             strip_id_o = -2*program_height_i+18; // strip ID 10,8,6,4
         end else begin // heights 8 and 13
-            strip_id_o = 0; // strip ID 1,2,11,12,13 (for heights 8 and 13) are exceptions (handle later)
+            if (program_height_i == 8)
+                strip_id_o = 1; // default to strip ID 1; handle ID 2 later
+            else if (program_height_i == 13)
+                strip_id_o = 13; //default to strip ID 13; handel ID 11 and 12 later
         end
     end
 endmodule
