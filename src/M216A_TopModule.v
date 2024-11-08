@@ -74,10 +74,46 @@ module M216A_TopModule(
 // 3a (width + width_i <= 128). Place program, provide output index, update occupied widths
 // 3b (width + width_i > 128). strike_o++, index_x_o = 128, index_y_o = 128
 
+    localparam MAX_WIDTH = 128;
+    localparam MAX_HEIGHT = 128;
+
     // register outputs
     reg [7:0] index_x_o_reg;
     reg [7:0] index_y_o_reg;
     reg [3:0] strike_o_reg;
+
+    // create an array to track strip widths
+    reg [7:0] strip_widths [12:0]; // 8 bits required to encode width in range [0,128], total 13 width registers
+
+    wire [3:0] strip_id_y0; // 4 bits to encode strip ID in range [1,13]
+    wire [3:0] strip_id_y1; // 4 bits to encode strip ID in range [1,13]
+    wire [3:0] zstrip_id_y0 = strip_id_y0 - 1; // 4 bits to encode zero-indexed strip ID (zstrip_id) in range [0,12]
+    wire [3:0] zstrip_id_y1 = strip_id_y1 - 1; // 4 bits to encode zero-indexed strip ID (zstrip_id) in range [0,12]
+
+    // map height y to strip ID
+    height_to_id hti_0 (
+        .program_height_i(height_i),
+        .strip_id_o(strip_id_y0)
+    );
+    // map height y+1 to strip ID
+    height_to_id hti_1 (
+        .program_height_i(height_i + 5'b1),
+        .strip_id_o(strip_id_y1)
+    );
+
+    // [TODO] compare widths of allowed strips and choose best one
+    wire [7:0] occupied_width_y0 = strip_widths[zstrip_id_y0];
+    wire [7:0] occupied_width_y1 = strip_widths[zstrip_id_y1];
+    wire [7:0] best_zstrip = (occupied_width_y0 > occupied_width_y1) ? zstrip_id_y1 : zstrip_id_y0;
+
+    always @(posedge clk_i)
+        if(rst_i) begin
+            for (integer i = 0; i < 13; i=i+1) begin
+                strip_widths[i] <= 8'b0;
+            end
+        end else begin
+            strip_widths[best_zstrip] = strip_widths[best_zstrip] + width_i;
+        end
 
     always @(posedge clk_i)
         if(rst_i) begin
@@ -94,4 +130,22 @@ module M216A_TopModule(
     assign index_y_o = index_y_o_reg;
     assign strike_o = strike_o_reg;
 
+endmodule
+
+module height_to_id (
+    input  wire [4:0] program_height_i, // 5 bits to encode program height in range [4,16]
+    output reg [3:0] strip_id_o // 4 bits to encode strip ID in range [1,13]. "reg" instead of "wire" because otherwise compiler complains
+);
+    // Implement function f: height_i -> strip_id
+    // Combinational logic for now, but might be faster to hardcode lookup table idk
+
+    always @(*) begin
+        if ((9 <= program_height_i) && (program_height_i <= 12)) begin // heights 9~12
+            strip_id_o = 2*program_height_i-15; // strip ID 3,5,7,9
+        end else if ((4 <= program_height_i) && (program_height_i <= 7)) begin // heights 4~7
+            strip_id_o = -2*program_height_i+18; // strip ID 10,8,6,4
+        end else begin // heights 8 and 13
+            strip_id_o = 0; // strip ID 1,2,11,12,13 (for heights 8 and 13) are exceptions (handle later)
+        end
+    end
 endmodule
