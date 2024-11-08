@@ -67,8 +67,31 @@ module M216A_TopModule(
 //Add your code below 
 //Make sure to Register the outputs using the Register modules given above
 
-assign index_x_o = 8'b0;
-assign index_y_o = 8'b0;
-assign strike_o = 4'b0;
+// [TODO] implement flowchart
+// 1. Check allowed strips and choose the least occupied strip
+// 2. Check if occupied width + width_i <= 128.
+// If yes, go to 3a. If no, go to 3b.
+// 3a (width + width_i <= 128). Place program, provide output index, update occupied widths
+// 3b (width + width_i > 128). strike_o++, index_x_o = 128, index_y_o = 128
+
+    // register outputs
+    reg [7:0] index_x_o_reg;
+    reg [7:0] index_y_o_reg;
+    reg [3:0] strike_o_reg;
+
+    always @(posedge clk_i)
+        if(rst_i) begin
+            index_x_o_reg <= 8'b0;
+            index_y_o_reg <= 8'b0;
+            strike_o_reg <= 4'b0;
+        end else begin
+            index_x_o_reg <= 8'b0;
+            index_y_o_reg <= 8'b0;
+            strike_o_reg <= 4'b0;
+        end
+
+    assign index_x_o = index_x_o_reg;
+    assign index_y_o = index_y_o_reg;
+    assign strike_o = strike_o_reg;
 
 endmodule
