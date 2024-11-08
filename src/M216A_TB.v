@@ -41,6 +41,7 @@ end
 
 // Test stimulus
 initial begin
+  $dumpvars(0, M216A_TB);
   // Initialize inputs
   clk = 1'b0;
   rst = 1'b1;
@@ -100,7 +101,7 @@ initial begin
 	  	$display("Congratulations: All tests passed");
 	  end
 	end
-        $stop;
+        $finish;
       end
 
       // Check output values and compare with expected output
