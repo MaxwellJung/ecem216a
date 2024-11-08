@@ -53,27 +53,16 @@ endmodule
 
 //Do NOT Modify This Module's I/O Definition
 module M216A_TopModule(
-    clk_i,
-    width_i,
-    height_i,
-    index_x_o,
-    index_y_o,
-    strike_o,
-    rst_i
+    input  wire       clk_i,
+    input  wire       rst_i,
+
+    input  wire [4:0] width_i,
+    input  wire [4:0] height_i,
+    
+    output wire [7:0] index_x_o,
+    output wire [7:0] index_y_o,
+    output wire [3:0] strike_o
 );
-
-input clk_i;
-input [4:0] width_i;
-input [4:0] height_i;
-output [7:0] index_x_o;
-output [7:0] index_y_o;
-output [3:0] strike_o;
-input rst_i;
-
-wire clk_i;
-wire [4:0] width_i;
-wire [4:0] height_i;
-wire rst_i;
 
 //Add your code below 
 //Make sure to Register the outputs using the Register modules given above
