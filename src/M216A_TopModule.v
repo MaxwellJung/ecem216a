@@ -67,11 +67,8 @@ module M216A_TopModule(
 //Add your code below 
 //Make sure to Register the outputs using the Register modules given above
 
-
-
-
-
-
-
+assign index_x_o = 8'b0;
+assign index_y_o = 8'b0;
+assign strike_o = 4'b0;
 
 endmodule
