@@ -1,56 +1,5 @@
 `timescale 1ns / 100ps
 
-//Do NOT Modify This Module
-module P1_Reg_8_bit (DataIn, DataOut, rst, clk);
-
-    input [7:0] DataIn;
-    output [7:0] DataOut;
-    input rst;
-    input clk;
-    reg [7:0] DataReg;
-   
-    always @(posedge clk)
-  	if(rst)
-            DataReg <= 8'b0;
-        else
-            DataReg <= DataIn;
-    assign DataOut = DataReg;
-endmodule
-
-//Do NOT Modify This Module
-module P1_Reg_5_bit (DataIn, DataOut, rst, clk);
-
-    input [4:0] DataIn;
-    output [4:0] DataOut;
-    input rst;
-    input clk;
-    reg [4:0] DataReg;
-    
-    always @(posedge clk)
-        if(rst)
-            DataReg <= 5'b0;
-        else
-            DataReg <= DataIn;
-    assign DataOut = DataReg;
-endmodule
-
-//Do NOT Modify This Module
-module P1_Reg_4_bit (DataIn, DataOut, rst, clk);
-
-    input [3:0] DataIn;
-    output [3:0] DataOut;
-    input rst;
-    input clk;
-    reg [3:0] DataReg;
-    
-    always @(posedge clk)
-        if(rst)
-            DataReg <= 4'b0;
-        else
-            DataReg <= DataIn;
-    assign DataOut = DataReg;
-endmodule
-
 //Do NOT Modify This Module's I/O Definition
 module M216A_TopModule(
     input  wire       clk_i,
@@ -103,7 +52,7 @@ module M216A_TopModule(
         end
     end
 
-    // create an array to track strip widths
+    // create an array to keep track of strip widths
     reg [7:0] strip_widths [12:0]; // 8 bits required to encode width in range [0,128], total 13 width registers
 
     wire [3:0] strip_id_h0; // 4 bits to encode strip ID in range [1,13]
@@ -113,12 +62,12 @@ module M216A_TopModule(
 
     // map height h to strip ID
     height_to_id hti_0 (
-        .program_height_i(height_i_reg),
+        .strip_height_i(height_i_reg),
         .strip_id_o(strip_id_h0)
     );
     // map height h+1 to strip ID
     height_to_id hti_1 (
-        .program_height_i(height_i_reg + 5'b1),
+        .strip_height_i(height_i_reg + 5'b1),
         .strip_id_o(strip_id_h1)
     );
 
@@ -131,9 +80,9 @@ module M216A_TopModule(
     wire [7:0] least_occupied_width = strip_widths[least_occupied_strip_zid];
     reg  [7:0] occupied_width_before;
 
-    // strip width logic
     wire place_program = (least_occupied_width + width_i_reg) <= MAX_WIDTH;
 
+    // strip width logic
     always @(posedge clk_i) begin
         if(rst_i) begin
             least_occupied_strip_id_reg <= 4'b0;
@@ -156,7 +105,7 @@ module M216A_TopModule(
     reg [3:0] strike_o_reg;
     wire [7:0] y;
 
-    strip_id_to_y sty_0 (
+    id_to_y ity_0 (
         .strip_id_i(least_occupied_strip_id_reg),
         .y_o(y)
     );
@@ -181,72 +130,34 @@ module M216A_TopModule(
 
     localparam additional_latency = 5;
 
-    reg [7:0] index_x_o_reg_delay [additional_latency-1:0];
-    reg [7:0] index_y_o_reg_delay [additional_latency-1:0];
-    reg [3:0] strike_o_reg_delay [additional_latency-1:0];
+    latency #(
+        .LENGTH(additional_latency),
+        .WIDTH(8)
+    ) delay_x_o (
+        .clk(clk_i),
+        .rst(rst_i),
+        .in(index_x_o_reg),
+        .out(index_x_o)
+    );
 
-    always @(posedge clk_i) begin
-        if(rst_i) begin
-            for (integer i = 0; i < additional_latency; i=i+1) begin
-                index_x_o_reg_delay[i] <= 8'b0;
-                index_y_o_reg_delay[i] <= 8'b0;
-                strike_o_reg_delay[i] <= 4'b0;
-            end
-        end else begin
-            index_x_o_reg_delay[additional_latency-1] <= index_x_o_reg;
-            index_y_o_reg_delay[additional_latency-1] <= index_y_o_reg;
-            strike_o_reg_delay[additional_latency-1] <= strike_o_reg;
-            for (integer i = 0; i < additional_latency-1; i=i+1) begin
-                index_x_o_reg_delay[i] <= index_x_o_reg_delay[i+1];
-                index_y_o_reg_delay[i] <= index_y_o_reg_delay[i+1];
-                strike_o_reg_delay[i] <= strike_o_reg_delay[i+1];
-            end
-        end
-    end
+    latency #(
+        .LENGTH(additional_latency),
+        .WIDTH(8)
+    ) delay_y_o (
+        .clk(clk_i),
+        .rst(rst_i),
+        .in(index_y_o_reg),
+        .out(index_y_o)
+    );
 
-    assign index_x_o = index_x_o_reg_delay[0];
-    assign index_y_o = index_y_o_reg_delay[0];
-    assign strike_o = strike_o_reg_delay[0];
+    latency #(
+        .LENGTH(additional_latency),
+        .WIDTH(4)
+    ) delay_strike_o (
+        .clk(clk_i),
+        .rst(rst_i),
+        .in(strike_o_reg),
+        .out(strike_o)
+    );
 
-endmodule
-
-module height_to_id (
-    input  wire [4:0] program_height_i, // 5 bits to encode program height in range [4,16]
-    output reg  [3:0] strip_id_o // 4 bits to encode strip ID in range [1,13]. "reg" instead of "wire" because otherwise compiler complains
-);
-    // Implement function f: height_i -> strip_id
-    // Combinational logic for now, but might be faster to hardcode lookup table idk
-
-    always @(*) begin
-        if ((9 <= program_height_i) && (program_height_i <= 12)) begin // heights 9~12
-            strip_id_o = 2*program_height_i-15; // strip ID 3,5,7,9
-        end else if ((4 <= program_height_i) && (program_height_i <= 7)) begin // heights 4~7
-            strip_id_o = -2*program_height_i+18; // strip ID 10,8,6,4
-        end else begin // heights 8 and 13
-            if (program_height_i == 8)
-                strip_id_o = 4'd1; // throw error; handle later
-            else if (program_height_i >= 13)
-                strip_id_o = 4'd13; // throw error; handle later
-        end
-    end
-endmodule
-
-module strip_id_to_y (
-    input  wire [3:0] strip_id_i,
-    output reg  [7:0] y_o
-);
-    // Implement function f: strip_id -> y position on compute array
-    // Combinational logic for now, but might be faster to hardcode lookup table idk
-
-    always @(*) begin
-        if ((1 <= strip_id_i) && (strip_id_i <= 11)) begin // heights 9~12
-            if (strip_id_i[0] == 1'b1) begin // odd numbered strip ID
-                y_o = 8 * (strip_id_i - 1);
-            end else begin
-                y_o = 8 * (strip_id_i) - (9 - (strip_id_i >> 1));
-            end
-        end else begin
-            y_o = 16 * strip_id_i + 92;
-        end
-    end
 endmodule
