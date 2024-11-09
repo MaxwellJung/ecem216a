@@ -157,6 +157,12 @@ module M216A_TopModule(
     assign index_x_o = index_x_o_reg;
     assign index_y_o = index_y_o_reg;
     assign strike_o = strike_o_reg;
+    wire [7:0] y;
+
+    strip_id_to_y sty_0 (
+        .strip_id_i(least_occupied_strip_id_reg),
+        .y_o(y)
+    );
 
     always @(posedge clk_i) begin
         if(rst_i) begin
@@ -167,8 +173,7 @@ module M216A_TopModule(
             if (place_program) begin
                 strike_o_reg <= 0;
                 index_x_o_reg <= occupied_width_before;
-                // [TODO] compute y position from strip id
-                index_y_o_reg <= least_occupied_strip_id_reg;
+                index_y_o_reg <= y;
             end else begin
                 strike_o_reg <= strike_o_reg + 1;
                 index_x_o_reg <= MAX_WIDTH;
@@ -181,7 +186,7 @@ endmodule
 
 module height_to_id (
     input  wire [4:0] program_height_i, // 5 bits to encode program height in range [4,16]
-    output reg [3:0] strip_id_o // 4 bits to encode strip ID in range [1,13]. "reg" instead of "wire" because otherwise compiler complains
+    output reg  [3:0] strip_id_o // 4 bits to encode strip ID in range [1,13]. "reg" instead of "wire" because otherwise compiler complains
 );
     // Implement function f: height_i -> strip_id
     // Combinational logic for now, but might be faster to hardcode lookup table idk
@@ -196,6 +201,26 @@ module height_to_id (
                 strip_id_o = 4'bXXXX; // throw error; handle later
             else if (program_height_i == 13)
                 strip_id_o = 4'bXXXX; // throw error; handle later
+        end
+    end
+endmodule
+
+module strip_id_to_y (
+    input  wire [3:0] strip_id_i,
+    output reg  [7:0] y_o
+);
+    // Implement function f: strip_id -> y position on compute array
+    // Combinational logic for now, but might be faster to hardcode lookup table idk
+
+    always @(*) begin
+        if ((1 <= strip_id_i) && (strip_id_i <= 11)) begin // heights 9~12
+            if (strip_id_i[0] == 1'b1) begin // odd numbered strip ID
+                y_o = 8 * (strip_id_i - 1);
+            end else begin
+                y_o = 8 * (strip_id_i) - (9 - (strip_id_i >> 1));
+            end
+        end else begin
+            y_o = 16 * strip_id_i + 92;
         end
     end
 endmodule
