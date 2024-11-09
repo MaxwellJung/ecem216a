@@ -224,9 +224,9 @@ module height_to_id (
             strip_id_o = -2*program_height_i+18; // strip ID 10,8,6,4
         end else begin // heights 8 and 13
             if (program_height_i == 8)
-                strip_id_o = 4'bXXXX; // throw error; handle later
-            else if (program_height_i == 13)
-                strip_id_o = 4'bXXXX; // throw error; handle later
+                strip_id_o = 4'd1; // throw error; handle later
+            else if (program_height_i >= 13)
+                strip_id_o = 4'd13; // throw error; handle later
         end
     end
 endmodule
