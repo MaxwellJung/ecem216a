@@ -154,9 +154,6 @@ module M216A_TopModule(
     reg [7:0] index_x_o_reg;
     reg [7:0] index_y_o_reg;
     reg [3:0] strike_o_reg;
-    assign index_x_o = index_x_o_reg;
-    assign index_y_o = index_y_o_reg;
-    assign strike_o = strike_o_reg;
     wire [7:0] y;
 
     strip_id_to_y sty_0 (
@@ -181,6 +178,35 @@ module M216A_TopModule(
             end
         end
     end
+
+    localparam additional_latency = 5;
+
+    reg [7:0] index_x_o_reg_delay [additional_latency-1:0];
+    reg [7:0] index_y_o_reg_delay [additional_latency-1:0];
+    reg [3:0] strike_o_reg_delay [additional_latency-1:0];
+
+    always @(posedge clk_i) begin
+        if(rst_i) begin
+            for (integer i = 0; i < additional_latency; i=i+1) begin
+                index_x_o_reg_delay[i] <= 8'b0;
+                index_y_o_reg_delay[i] <= 8'b0;
+                strike_o_reg_delay[i] <= 4'b0;
+            end
+        end else begin
+            index_x_o_reg_delay[additional_latency-1] <= index_x_o_reg;
+            index_y_o_reg_delay[additional_latency-1] <= index_y_o_reg;
+            strike_o_reg_delay[additional_latency-1] <= strike_o_reg;
+            for (integer i = 0; i < additional_latency-1; i=i+1) begin
+                index_x_o_reg_delay[i] <= index_x_o_reg_delay[i+1];
+                index_y_o_reg_delay[i] <= index_y_o_reg_delay[i+1];
+                strike_o_reg_delay[i] <= strike_o_reg_delay[i+1];
+            end
+        end
+    end
+
+    assign index_x_o = index_x_o_reg_delay[0];
+    assign index_y_o = index_y_o_reg_delay[0];
+    assign strike_o = strike_o_reg_delay[0];
 
 endmodule
 
