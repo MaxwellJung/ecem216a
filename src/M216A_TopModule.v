@@ -27,14 +27,15 @@ module M216A_TopModule(
     localparam MAX_HEIGHT = 128;
     localparam CYCLES_PER_PROGRAM = 4;
 
-    reg [2:0] counter; // counts from 1 to CYCLES_PER_PROGRAM
     wire valid_program = (width_i > 0) && (height_i > 0);
 
+    // count from 0 to (CYCLES_PER_PROGRAM - 1)
+    reg [2:0] counter;
     always @(posedge clk_i) begin
         if(rst_i) begin
             counter <= 2'd0;
         end else if (valid_program) begin
-            counter <= (counter >= CYCLES_PER_PROGRAM - 1) ? 0 : counter + 1; // count from 0 to (CYCLES_PER_PROGRAM - 1)
+            counter <= (counter >= CYCLES_PER_PROGRAM - 1) ? 0 : counter + 1;
         end
     end
 
@@ -53,12 +54,12 @@ module M216A_TopModule(
     end
 
     // create an array to keep track of strip widths
-    reg [7:0] strip_widths [12:0]; // 8 bits required to encode width in range [0,128], total 13 width registers
-
-    wire [3:0] strip_id_h0; // 4 bits to encode strip ID in range [1,13]
-    wire [3:0] strip_id_h1; // 4 bits to encode strip ID in range [1,13]
-    wire [3:0] strip_zid_h0 = strip_id_h0 - 1; // 4 bits to encode zero-indexed strip ID (strip_zid) in range [0,12]
-    wire [3:0] strip_zid_h1 = strip_id_h1 - 1; // 4 bits to encode zero-indexed strip ID (strip_zid) in range [0,12]
+    reg [7:0] strip_widths [12:0];
+    
+    // strip ID corresponding to height h
+    wire [3:0] strip_id_h0;
+    // strip ID corresponding to height (h+1)
+    wire [3:0] strip_id_h1;
 
     // map height h to strip ID
     height_to_id hti_0 (
@@ -71,30 +72,48 @@ module M216A_TopModule(
         .strip_id_o(strip_id_h1)
     );
 
-    // [TODO] compare widths of allowed strips and choose best one
-    wire [7:0] occupied_width_h0 = strip_widths[strip_zid_h0];
-    wire [7:0] occupied_width_h1 = strip_widths[strip_zid_h1];
-    wire [3:0] least_occupied_strip_id = (occupied_width_h0 <= occupied_width_h1) ? strip_id_h0 : strip_id_h1;
-    reg  [3:0] least_occupied_strip_id_reg;
-    wire [3:0] least_occupied_strip_zid = least_occupied_strip_id - 1; // 4 bits to encode zero-indexed strip ID (strip_zid) in range [0,12]
-    wire [7:0] least_occupied_width = strip_widths[least_occupied_strip_zid];
-    reg  [7:0] occupied_width_before;
+    wire [7:0] chosen_strip_width;
+    wire [3:0] chosen_strip_id;
+    // registered versions of the wires above
+    reg  [7:0] chosen_strip_width_reg;
+    reg  [3:0] chosen_strip_id_reg;
 
-    wire place_program = (least_occupied_width + width_i_reg) <= MAX_WIDTH;
+    least_strip ls_0 (
+        .strip_id_i_0(strip_id_h0),
+        .strip_width_i_0(strip_widths[strip_id_h0 - 1]),
 
-    // strip width logic
+        .strip_id_i_1(strip_id_h1),
+        .strip_width_i_1(strip_widths[strip_id_h1 - 1]),
+
+        .strip_id_i_2(4'd0),
+        .strip_width_i_2(MAX_WIDTH[7:0]),
+
+        .strip_id_o(chosen_strip_id),
+        .strip_width_o(chosen_strip_width)
+    );
+
+    // register chosen strip id and width
     always @(posedge clk_i) begin
         if(rst_i) begin
-            least_occupied_strip_id_reg <= 4'b0;
-            occupied_width_before <= 8'b0;
+            chosen_strip_id_reg <= 4'b0;
+            chosen_strip_width_reg <= 8'b0;
+        end else if (counter == 1) begin
+            chosen_strip_id_reg <= chosen_strip_id;
+            chosen_strip_width_reg <= chosen_strip_width;
+        end
+    end
+
+    wire place_program = (chosen_strip_width + width_i_reg) <= MAX_WIDTH;
+
+    // add program to strip and update strip width
+    always @(posedge clk_i) begin
+        if(rst_i) begin
             for (integer i = 0; i < 13; i=i+1) begin
                 strip_widths[i] <= 8'b0;
             end
         end else if (counter == 1) begin
-            least_occupied_strip_id_reg <= least_occupied_strip_id;
             if (place_program) begin
-                occupied_width_before <= least_occupied_width;
-                strip_widths[least_occupied_strip_zid] <= least_occupied_width + width_i_reg;
+                strip_widths[chosen_strip_id - 1] <= chosen_strip_width + width_i_reg;
             end
         end
     end
@@ -103,11 +122,11 @@ module M216A_TopModule(
     reg [7:0] index_x_o_reg;
     reg [7:0] index_y_o_reg;
     reg [3:0] strike_o_reg;
-    wire [7:0] y;
+    wire [7:0] strip_y_position;
 
     id_to_y ity_0 (
-        .strip_id_i(least_occupied_strip_id_reg),
-        .y_o(y)
+        .strip_id_i(chosen_strip_id_reg),
+        .y_o(strip_y_position)
     );
 
     always @(posedge clk_i) begin
@@ -117,13 +136,12 @@ module M216A_TopModule(
             strike_o_reg <= 4'b0;
         end else if (counter == 2) begin
             if (place_program) begin
-                strike_o_reg <= 0;
-                index_x_o_reg <= occupied_width_before;
-                index_y_o_reg <= y;
+                index_x_o_reg <= chosen_strip_width_reg;
+                index_y_o_reg <= strip_y_position;
             end else begin
-                strike_o_reg <= strike_o_reg + 1;
                 index_x_o_reg <= MAX_WIDTH;
                 index_y_o_reg <= MAX_HEIGHT;
+                strike_o_reg <= strike_o_reg + 1;
             end
         end
     end
