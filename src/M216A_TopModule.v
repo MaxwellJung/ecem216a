@@ -69,13 +69,16 @@ module M216A_TopModule(
 
     least_strip least_strip_0 (
         .strip_id_0_i(strip_id_0),
-        .strip_width_0_i((strip_id_0 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_0 - 1]), // Assign max width to illegal strip ID (ID = 0) so it never gets chosen
+        // Assign MAX_WIDTH to illegal strip ID (when ID = 0) so it never gets chosen
+        .strip_width_0_i((strip_id_0 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_0 - 1]),
 
         .strip_id_1_i(strip_id_1),
-        .strip_width_1_i((strip_id_1 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_1 - 1]), // Assign max width to illegal strip ID (ID = 0) so it never gets chosen
+        // Assign MAX_WIDTH to illegal strip ID (when ID = 0) so it never gets chosen
+        .strip_width_1_i((strip_id_1 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_1 - 1]),
 
         .strip_id_2_i(strip_id_2),
-        .strip_width_2_i((strip_id_2 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_2 - 1]), // Assign max width to illegal strip ID (ID = 0) so it never gets chosen
+        // Assign MAX_WIDTH to illegal strip ID (when ID = 0) so it never gets chosen
+        .strip_width_2_i((strip_id_2 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_2 - 1]),
 
         .strip_id_o(chosen_strip_id),
         .strip_width_o(chosen_strip_width)

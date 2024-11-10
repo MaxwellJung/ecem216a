@@ -17,7 +17,7 @@ module height_to_id (
     end
 endmodule
 
-// Maps program height to maximum of three elligible strip IDs (function f: strip_height -> strip_id)
+// Maps program height to maximum of three elligible strip IDs (function f: strip_height -> {strip_id_0, strip_id_1, strip_id_2})
 module program_height_to_id (
     input  wire [4:0] program_height_i, // 5 bits to encode program height in range [4,16]
     output reg  [3:0] strip_id_0_o, // 4 bits to encode strip ID in range [1,13]. "reg" instead of "wire" because otherwise compiler complains
