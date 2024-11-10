@@ -13,7 +13,7 @@ module id_to_y (
                 y_o = 8 * (strip_id_i) - (9 - (strip_id_i >> 1));
             end
         end else begin
-            y_o = 16 * strip_id_i + 92;
+            y_o = 16 * strip_id_i - 96;
         end
     end
 endmodule
