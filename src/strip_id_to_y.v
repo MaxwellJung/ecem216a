@@ -6,13 +6,13 @@ module id_to_y (
     output reg  [7:0] y_o // 8 bits to encode y position in range [0,128]. "reg" instead of "wire" because otherwise compiler complains
 );
     always @(*) begin
-        if ((1 <= strip_id_i) && (strip_id_i <= 11)) begin // heights 9~12
+        if ((1 <= strip_id_i) && (strip_id_i <= 11)) begin
             if (strip_id_i[0] == 1'b1) begin // odd numbered strip ID
                 y_o = 8 * (strip_id_i - 1);
-            end else begin
+            end else begin // even numbered strip ID
                 y_o = 8 * (strip_id_i) - (9 - (strip_id_i >> 1));
             end
-        end else begin
+        end else begin // strip ID 12 and 13
             y_o = 16 * strip_id_i - 96;
         end
     end

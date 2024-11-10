@@ -1,5 +1,6 @@
 // least_strip.v
 // Given 3 strip IDs and their corresponding widths, output the strip ID with the smallest width
+// In case of tie, choose lower indexed ID/width (i.e. id/width_0 < id/width_1 < id/width_2)
 module least_strip (
     input  wire [3:0] strip_id_0_i,
     input  reg  [7:0] strip_width_0_i,
