@@ -95,7 +95,8 @@ module M216A_TopModule(
         end
     end
 
-    wire place_program = (chosen_strip_width_reg + width_i_reg) <= MAX_WIDTH;
+    wire [7:0] new_width = chosen_strip_width_reg + width_i_reg;
+    wire place_program = new_width <= MAX_WIDTH;
 
     // Add program to chosen strip and update its width
     always @(posedge clk_i) begin
@@ -105,7 +106,7 @@ module M216A_TopModule(
             end
         end else if (counter == 2) begin
             if (place_program) begin
-                strip_widths[chosen_strip_id - 1] <= chosen_strip_width_reg + width_i_reg;
+                strip_widths[chosen_strip_id - 1] <= new_width;
             end
         end
     end
