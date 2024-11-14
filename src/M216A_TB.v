@@ -41,6 +41,8 @@ end
 
 // Test stimulus
 initial begin
+  $dumpvars(0, M216A_TB);
+  $timeformat(-9, 2, " ns", 20);
   // Initialize inputs
   clk = 1'b0;
   rst = 1'b1;
@@ -100,7 +102,7 @@ initial begin
 	  	$display("Congratulations: All tests passed");
 	  end
 	end
-        $stop;
+        $finish;
       end
 
       // Check output values and compare with expected output
@@ -115,7 +117,7 @@ initial begin
   fork
     forever begin
       if ((index_x_o != expected_index_x) || (index_y_o != expected_index_y)) begin
-        $display("Test failed! Expected: %d %d, Actual: %d %d\n", expected_index_x, expected_index_y, index_x_o, index_y_o);
+        $display("Test failed at %t! Expected: %d %d, Actual: %d %d\n", $time, expected_index_x, expected_index_y, index_x_o, index_y_o);
 	count = count + 1;
       end
       #8;
