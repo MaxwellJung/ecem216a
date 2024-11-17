@@ -99,9 +99,10 @@ module M216A_TopModule(
     wire place_program = new_width <= MAX_WIDTH;
 
     // Add program to chosen strip and update its width
+    integer i;
     always @(posedge clk_i) begin
         if(rst_i) begin
-            for (integer i = 0; i < 13; i=i+1) begin
+            for (i = 0; i < 13; i=i+1) begin
                 strip_widths[i] <= 8'b0;
             end
         end else if (counter == 2) begin
