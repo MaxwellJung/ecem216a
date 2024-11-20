@@ -1,4 +1,4 @@
-SRC_DIRS := ./src
+SRC_DIRS := ./hdl
 BUILD_DIR := ./build
 SIM_DIR := $(BUILD_DIR)/sim
 SRC_FILES := $(shell find $(SRC_DIRS) -name '*.sv' -or -name '*.v')
@@ -14,7 +14,7 @@ $(SIM_DIR)/rect_fill_dump.vcd: $(BUILD_DIR)/m216a_tb.vvp
 	mkdir -p $(dir $@)
 	mv dump.vcd $@
 
-$(BUILD_DIR)/m216a_tb.vvp: $(SRC_FILES)
+$(BUILD_DIR)/m216a_tb.vvp: $(SRC_FILES) ./test/M216A_TB.v
 	mkdir -p $(dir $@)
 	iverilog -o $@ -s M216A_TB $^
 

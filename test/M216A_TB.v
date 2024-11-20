@@ -3,8 +3,8 @@
 module M216A_TB;
 
 // Parameters
-parameter TEST_FILE_INPUT = "input_test.txt";
-parameter TEST_FILE_OUTPUT = "output_test.txt";
+parameter TEST_FILE_INPUT = "./test/input_test.txt";
+parameter TEST_FILE_OUTPUT = "./test/output_test.txt";
 
 // Inputs
 reg clk;

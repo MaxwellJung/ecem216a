@@ -1,5 +1,10 @@
 build/
+WORK/
+synth/
+report/
 dump.vcd
+default.svf
+*.log
 
 # ignore ModelSim generated files and directories (temp files and so on)
 [_@]*

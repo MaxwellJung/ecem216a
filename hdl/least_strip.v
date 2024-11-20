@@ -3,13 +3,13 @@
 // In case of tie, choose lower indexed ID/width (i.e. id/width_0 < id/width_1 < id/width_2)
 module least_strip (
     input  wire [3:0] strip_id_0_i,
-    input  reg  [7:0] strip_width_0_i,
+    input  wire  [7:0] strip_width_0_i,
 
     input  wire [3:0] strip_id_1_i,
-    input  reg  [7:0] strip_width_1_i,
+    input  wire  [7:0] strip_width_1_i,
     
     input  wire [3:0] strip_id_2_i,
-    input  reg  [7:0] strip_width_2_i,
+    input  wire  [7:0] strip_width_2_i,
 
     output reg  [3:0] strip_id_o,
     output reg  [7:0] strip_width_o
