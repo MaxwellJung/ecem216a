@@ -26,8 +26,8 @@ module least_strip (
             strip_id_o <= strip_id_2_i;
             strip_width_o <= strip_width_2_i;
         end else begin
-            strip_id_o <= 4'bXXXX; // set to 4'b0 if not synthesizable
-            strip_width_o <= 8'bXXXXXXXX; // set to 8'b11111111 if not synthesizable
+            strip_id_o <= 4'b0; // set to 4'b0 if not synthesizable
+            strip_width_o <= 8'b0; // set to 8'b11111111 if not synthesizable
         end
     end
 

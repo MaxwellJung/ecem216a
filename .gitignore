@@ -5,6 +5,7 @@ report/
 dump.vcd
 default.svf
 *.log
+alib-52/
 
 # ignore ModelSim generated files and directories (temp files and so on)
 [_@]*

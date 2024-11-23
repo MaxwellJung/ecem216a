@@ -1,6 +1,7 @@
-set HDL_DIR "./hdl/"
-set SYNTH_DIR "./synth/"
-set REPORT_DIR "./report/"
+set BUILD_DIR "./build"
+set HDL_DIR "./hdl"
+set SYNTH_DIR "${BUILD_DIR}/synth"
+set REPORT_DIR "${BUILD_DIR}/report"
 
 lappend search_path $HDL_DIR $SYNTH_DIR
 
