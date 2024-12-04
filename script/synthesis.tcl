@@ -37,6 +37,7 @@ set_output_delay -max $OUT_DEL -clock $CLK_PORT [all_outputs]
 set_output_delay -min $OUT_DEL_MIN -clock $CLK_PORT [all_outputs]
 
 # set_max_area 0.0
+# set_max_total_power 0.0
 
 ungroup -flatten -all
 uniquify
