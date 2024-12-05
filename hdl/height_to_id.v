@@ -8,9 +8,9 @@ module height_to_id (
 );
     always @(*) begin
         if ((9 <= strip_height_i) && (strip_height_i <= 12)) begin // heights 9~12
-            strip_id_o = 2*strip_height_i-15; // strip ID 3,5,7,9
+            strip_id_o = (strip_height_i << 1) - 15; // strip ID 3,5,7,9
         end else if ((4 <= strip_height_i) && (strip_height_i <= 7)) begin // heights 4~7
-            strip_id_o = -2*strip_height_i+18; // strip ID 10,8,6,4
+            strip_id_o = -(strip_height_i << 1) + 18; // strip ID 10,8,6,4
         end else begin // heights 8 and 13~16 are exceptions
             strip_id_o = 4'd0; // throw error; handled by outer module
         end

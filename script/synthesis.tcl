@@ -37,6 +37,7 @@ set_output_delay -max $OUT_DEL -clock $CLK_PORT [all_outputs]
 set_output_delay -min $OUT_DEL_MIN -clock $CLK_PORT [all_outputs]
 
 # set_max_area 0.0
+# set_max_total_power 0.0
 
 ungroup -flatten -all
 uniquify
@@ -55,8 +56,8 @@ compile -only_hold_time
 
 # Get reports
 file mkdir ${REPORT_DIR}/${DESIGN_NAME}
-report_timing -path full -delay min -max_paths 10 > ${REPORT_DIR}/${DESIGN_NAME}/design.holdtiming
-report_timing -path full -delay max -max_paths 10 > ${REPORT_DIR}/${DESIGN_NAME}/design.setuptiming
+report_timing -path full -delay min -max_paths 10 -significant_digits ${SIG_FIGS} > ${REPORT_DIR}/${DESIGN_NAME}/design.holdtiming
+report_timing -path full -delay max -max_paths 10 -significant_digits ${SIG_FIGS} > ${REPORT_DIR}/${DESIGN_NAME}/design.setuptiming
 report_area -hierarchy > ${REPORT_DIR}/${DESIGN_NAME}/design.area
 report_power -hier -hier_level 2 > ${REPORT_DIR}/${DESIGN_NAME}/design.power
 report_resources > ${REPORT_DIR}/${DESIGN_NAME}/design.resources
