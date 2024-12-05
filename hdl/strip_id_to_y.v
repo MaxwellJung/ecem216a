@@ -12,8 +12,10 @@ module id_to_y (
             end else begin // even numbered strip ID
                 y_o = (strip_id_i << 3) - (9 - (strip_id_i >> 1));
             end
-        end else begin // strip ID 12 and 13
+        end else if ((12 <= strip_id_i) && (strip_id_i <= 13)) begin // strip ID 12 and 13
             y_o = (strip_id_i << 4) - 96;
+        end else begin
+            y_o = 0; // strip ID out of bounds exception
         end
     end
 endmodule

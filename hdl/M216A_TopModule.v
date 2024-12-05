@@ -30,7 +30,9 @@ module M216A_TopModule(
         if(rst_i) begin
             counter <= 2'd0;
         end else if (valid_program) begin
-            counter <= (counter >= CYCLES_PER_PROGRAM - 1) ? 0 : counter + 1;
+            counter <= (counter >= CYCLES_PER_PROGRAM) ? 1 : counter + 1;
+        end else begin
+            counter <= 1;
         end
     end
 
@@ -42,7 +44,7 @@ module M216A_TopModule(
         if(rst_i) begin
             width_i_reg <= 5'b0;
             height_i_reg <= 5'b0;
-        end else if (counter == 0) begin
+        end else if (counter == 1) begin
             width_i_reg <= width_i;
             height_i_reg <= height_i;
         end
@@ -53,12 +55,25 @@ module M216A_TopModule(
 
     // Map program height h to 3 potential strip IDs
     wire [3:0] strip_id_0, strip_id_1, strip_id_2;
+    reg  [3:0] strip_id_0_reg, strip_id_1_reg, strip_id_2_reg;
     program_height_to_id program_height_to_id_0 (
         .program_height_i(height_i_reg),
         .strip_id_0_o(strip_id_0),
         .strip_id_1_o(strip_id_1),
         .strip_id_2_o(strip_id_2)
     );
+
+    always @(posedge clk_i) begin
+        if(rst_i) begin
+            strip_id_0_reg <= 4'b0;
+            strip_id_1_reg <= 4'b0;
+            strip_id_2_reg <= 4'b0;
+        end else if (counter == 2) begin
+            strip_id_0_reg <= strip_id_0;
+            strip_id_1_reg <= strip_id_1;
+            strip_id_2_reg <= strip_id_2;
+        end
+    end
 
     // Choose best strip ID
     wire [7:0] chosen_strip_width;
@@ -68,17 +83,17 @@ module M216A_TopModule(
     reg  [3:0] chosen_strip_id_reg;
 
     least_strip least_strip_0 (
-        .strip_id_0_i(strip_id_0),
+        .strip_id_0_i(strip_id_0_reg),
         // Assign MAX_WIDTH to illegal strip ID (when ID = 0) so it never gets chosen
-        .strip_width_0_i((strip_id_0 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_0 - 1]),
+        .strip_width_0_i((strip_id_0_reg == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_0_reg - 1]),
 
-        .strip_id_1_i(strip_id_1),
+        .strip_id_1_i(strip_id_1_reg),
         // Assign MAX_WIDTH to illegal strip ID (when ID = 0) so it never gets chosen
-        .strip_width_1_i((strip_id_1 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_1 - 1]),
+        .strip_width_1_i((strip_id_1_reg == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_1_reg - 1]),
 
-        .strip_id_2_i(strip_id_2),
+        .strip_id_2_i(strip_id_2_reg),
         // Assign MAX_WIDTH to illegal strip ID (when ID = 0) so it never gets chosen
-        .strip_width_2_i((strip_id_2 == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_2 - 1]),
+        .strip_width_2_i((strip_id_2_reg == 0) ? MAX_WIDTH[7:0] : strip_widths[strip_id_2_reg - 1]),
 
         .strip_id_o(chosen_strip_id),
         .strip_width_o(chosen_strip_width)
@@ -89,7 +104,7 @@ module M216A_TopModule(
         if(rst_i) begin
             chosen_strip_id_reg <= 4'b0;
             chosen_strip_width_reg <= 8'b0;
-        end else if (counter == 1) begin
+        end else if (counter == 3) begin
             chosen_strip_id_reg <= chosen_strip_id;
             chosen_strip_width_reg <= chosen_strip_width;
         end
@@ -105,7 +120,7 @@ module M216A_TopModule(
             for (i = 0; i < 13; i=i+1) begin
                 strip_widths[i] <= 8'b0;
             end
-        end else if (counter == 2) begin
+        end else if (counter == 4) begin
             if (place_program) begin
                 strip_widths[chosen_strip_id - 1] <= new_width;
             end
@@ -129,7 +144,7 @@ module M216A_TopModule(
             index_x_o_reg <= 8'b0;
             index_y_o_reg <= 8'b0;
             strike_o_reg <= 4'b0;
-        end else if (counter == 3) begin
+        end else if (counter == 4) begin
             if (place_program) begin
                 index_x_o_reg <= chosen_strip_width_reg;
                 index_y_o_reg <= strip_y_position;
