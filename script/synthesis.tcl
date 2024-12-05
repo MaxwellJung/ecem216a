@@ -44,7 +44,7 @@ uniquify
 
 # Compile design
 compile -only_design_rule
-compile -map high
+compile -map_effort high
 compile -boundary_optimization
 compile -only_hold_time
 

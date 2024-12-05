@@ -1,0 +1,286 @@
+################################################################################
+# lab3.upf                                                                     #
+################################################################################
+
+#####
+# Comment out "set_design_top lab3_tb/DUT" for synthesis
+################################################################################
+set_design_top lab3_tb/DUT
+
+
+#####
+# Create Power Domains
+################################################################################
+
+create_power_domain pd_top -include_scope
+create_power_domain Domain_1 -elements {CM}
+create_power_domain Domain_2 -elements {LFSR}
+create_power_domain Domain_3 -elements {SD}
+create_power_domain Domain_4 -elements {CNT}
+create_power_domain Domain_5 -elements {BCD}
+
+#####
+# Create VDD
+####################
+create_supply_port VDD -direction in -domain pd_top
+create_supply_net  VDD -domain pd_top
+create_supply_net  VDD -domain Domain_1 -reuse
+create_supply_net  VDD -domain Domain_2 -reuse
+create_supply_net  VDD -domain Domain_3 -reuse
+create_supply_net  VDD -domain Domain_4 -reuse
+create_supply_net  VDD -domain Domain_5 -reuse
+connect_supply_net VDD -ports {VDD}
+
+#####
+# Create VSS
+####################
+create_supply_port VSS -direction in -domain pd_top
+create_supply_net  VSS -domain pd_top
+create_supply_net  VSS -domain Domain_1 -reuse
+create_supply_net  VSS -domain Domain_2 -reuse
+create_supply_net  VSS -domain Domain_3 -reuse
+create_supply_net  VSS -domain Domain_4 -reuse
+create_supply_net  VSS -domain Domain_5 -reuse
+connect_supply_net VSS -ports {VSS}
+
+#####
+# Create OTHER power nets
+####################
+create_supply_net  Vck_mx   -domain Domain_1
+create_supply_net  Vlfsr    -domain Domain_2
+create_supply_net  Vsd      -domain Domain_3
+create_supply_net  Vcnt     -domain Domain_4
+create_supply_net  Vbcd     -domain Domain_5
+
+
+#####
+# Set Primary Supply Nets for PDs
+################################################################################
+set_domain_supply_net pd_top -primary_power_net VDD -primary_ground_net VSS
+set_domain_supply_net Domain_1 -primary_power_net Vck_mx -primary_ground_net VSS
+set_domain_supply_net Domain_2 -primary_power_net Vlfsr  -primary_ground_net VSS
+set_domain_supply_net Domain_3 -primary_power_net Vsd    -primary_ground_net VSS
+set_domain_supply_net Domain_4 -primary_power_net Vcnt   -primary_ground_net VSS
+set_domain_supply_net Domain_5 -primary_power_net Vbcd   -primary_ground_net VSS
+
+
+
+#####
+# (1) Clock Mux
+####################
+create_power_switch clk_mux_SW \
+ -domain Domain_1 \
+ -input_supply_port  {vin1     VDD} \
+ -output_supply_port {vout1    Vck_mx} \
+ -control_port       {ctr_sig1 ck_mx_sw_ctr} \
+ -on_state           {CK_MX_ON vin1 {!ctr_sig1}} \
+ -off_state          {CK_MX_OFF   {ctr_sig1}}
+
+#####
+# (2) LFSR
+####################
+create_power_switch lfsr_SW \
+ -domain Domain_2 \
+ -input_supply_port  {vin2     VDD} \
+ -output_supply_port {vout2    Vlfsr} \
+ -control_port       {ctr_sig2 lfsr_sw_ctr} \
+ -on_state           {LFSR_ON vin2 {!ctr_sig2}} \
+ -off_state          {LFSR_OFF   {ctr_sig2}}
+
+#####
+# (3) Sequence Detector
+####################
+create_power_switch sq_det_SW \
+ -domain Domain_3 \
+ -input_supply_port  {vin3     VDD} \
+ -output_supply_port {vout3    Vsd} \
+ -control_port       {ctr_sig3 sd_sw_ctr} \
+ -on_state           {SD_ON vin3 {!ctr_sig3}} \
+ -off_state          {SD_OFF   {ctr_sig3}}
+
+#####
+# (4) Counter
+####################
+
+# ADD CODE HERE FOR PART 1: create_power_switch
+create_power_switch cnt_SW \
+ -domain Domain_4 \
+ -input_supply_port  {vin4     VDD} \
+ -output_supply_port {vout4    Vcnt} \
+ -control_port       {ctr_sig4 cnt_sw_ctr} \
+ -on_state           {CNT_ON vin4 {!ctr_sig4}} \
+ -off_state          {CNT_OFF   {ctr_sig4}}
+
+#####
+# (5) BCD Converter
+####################
+create_power_switch bcd_conv_SW \
+ -domain Domain_5 \
+ -input_supply_port  {vin5     VDD} \
+ -output_supply_port {vout5    Vbcd} \
+ -control_port       {ctr_sig5 bcd_sw_ctr} \
+ -on_state           {BCD_ON vin5 {!ctr_sig5}} \
+ -off_state          {BCD_OFF {ctr_sig5}}
+
+
+#####
+# Create Isolation Control Logic
+################################################################################
+
+#####
+# (1) Clock Mux
+####################
+set_isolation iso_strategy1 \
+ -domain Domain_1 \
+ -isolation_power_net VDD \
+ -isolation_ground_net VSS \
+ -clamp_value 1 \
+ -applies_to inputs \
+ -elements {CM/sel_clk}
+
+set_isolation_control iso_strategy1 \
+ -domain Domain_1 \
+ -isolation_signal iso1 \
+ -isolation_sense high
+
+map_isolation_cell iso_strategy1 \
+ -domain Domain_1 \
+ -lib_cells {ISOLORX1_RVT \
+     ISOLORX2_RVT \
+	 ISOLORX4_RVT \
+	 ISOLORX8_RVT \
+	 ISOLORAOX1_RVT \
+	 ISOLORAOX2_RVT \
+	 ISOLORAOX4_RVT \
+	 ISOLORAOX8_RVT}
+
+#####
+# (2) LFSR
+####################
+set_isolation iso_strategy2 \
+ -domain Domain_2 \
+ -isolation_power_net VDD \
+ -isolation_ground_net VSS \
+ -clamp_value 1 \
+ -applies_to outputs \
+ -elements {LFSR/reg_out}
+
+set_isolation_control iso_strategy2 \
+ -domain Domain_2 \
+ -isolation_signal iso2 \
+ -isolation_sense high
+
+map_isolation_cell iso_strategy2 \
+ -domain Domain_2 \
+ -lib_cells {ISOLORX1_RVT \
+     ISOLORX2_RVT \
+	 ISOLORX4_RVT \
+	 ISOLORX8_RVT \
+	 ISOLORAOX1_RVT \
+	 ISOLORAOX2_RVT \
+	 ISOLORAOX4_RVT \
+	 ISOLORAOX8_RVT}
+
+#####
+# (3) Sequence Detector
+####################
+set_isolation iso_strategy3 \
+ -domain Domain_3 \
+ -isolation_power_net VDD \
+ -isolation_ground_net VSS \
+ -clamp_value 1 \
+ -applies_to outputs \
+ -elements {SD/out}
+
+set_isolation_control iso_strategy3 \
+ -domain Domain_3 \
+ -isolation_signal iso3 \
+ -isolation_sense low
+
+map_isolation_cell iso_strategy3 \
+ -domain Domain_3 \
+ -lib_cells {ISOLORX1_RVT \
+     ISOLORX2_RVT \
+	 ISOLORX4_RVT \
+	 ISOLORX8_RVT \
+	 ISOLORAOX1_RVT \
+	 ISOLORAOX2_RVT \
+	 ISOLORAOX4_RVT \
+	 ISOLORAOX8_RVT}
+
+#####
+# (4) Counter
+####################
+
+# ADD CODE HERE FOR PART 1: set_isolation
+set_isolation iso_strategy4 \
+ -domain Domain_4 \
+ -isolation_power_net VDD \
+ -isolation_ground_net VSS \
+ -clamp_value 0 \
+ -applies_to outputs \
+ -elements {CNT/count1}
+
+set_isolation_control iso_strategy4 \
+ -domain Domain_4 \
+ -isolation_signal iso4 \
+ -isolation_sense high
+
+map_isolation_cell iso_strategy4 \
+ -domain Domain_4 \
+ -lib_cells {ISOLORX1_RVT \
+     ISOLORX2_RVT \
+	 ISOLORX4_RVT \
+	 ISOLORX8_RVT \
+	 ISOLORAOX1_RVT \
+	 ISOLORAOX2_RVT \
+	 ISOLORAOX4_RVT \
+	 ISOLORAOX8_RVT}
+
+#####
+# (5) BCD Converter
+####################
+set_isolation iso_strategy5 \
+ -domain Domain_5 \
+ -isolation_power_net VDD \
+ -isolation_ground_net VSS \
+ -clamp_value 1 \
+ -applies_to both
+
+set_isolation_control iso_strategy5 \
+ -domain Domain_5 \
+ -isolation_signal iso5 \
+ -isolation_sense low
+ 
+map_isolation_cell iso_strategy5 \
+ -domain Domain_5 \
+ -lib_cells {ISOLORX1_RVT \
+     ISOLORX2_RVT \
+	 ISOLORX4_RVT \
+	 ISOLORX8_RVT \
+	 ISOLORAOX1_RVT \
+	 ISOLORAOX2_RVT \
+	 ISOLORAOX4_RVT \
+	 ISOLORAOX8_RVT}
+
+#####
+# Create Retention Strategy
+################################################################################
+
+#####
+# (4) Counter
+####################
+set_retention ret_strategy4 \
+ -domain Domain_4 \
+ -retention_power_net VDD \
+ -retention_ground_net VSS \
+ -elements {CNT/count}
+
+set_retention_control ret_strategy4 \
+ -domain Domain_4 \
+ -save_signal {save_cnt high} \
+ -restore_signal {restore_cnt high}
+
+map_retention_cell ret_strategy4 \
+ -domain Domain_4 \
+ -lib_cell_type clock_low
