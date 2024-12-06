@@ -55,7 +55,3 @@ compile -only_hold_time
 # remove_unconnected_ports -blast_buses [get_cells -hier]
 
 source ./script/report.tcl
-
-source ./script/export.tcl
-
-exit
