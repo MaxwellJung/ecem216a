@@ -6,7 +6,7 @@ set REPORT_DIR "${BUILD_DIR}/report"
 lappend search_path $HDL_DIR $SYNTH_DIR
 
 # Clock period (ns)
-set TCLK 0.42
+set TCLK 0.5
 # 10% of TCLK
 set TCU  [expr 0.1*${TCLK}]
 # 7.5% of TCLK
