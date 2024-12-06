@@ -1,0 +1,140 @@
+################################################################################
+# power.upf                                                                     #
+################################################################################
+
+#####
+# Comment out "set_design_top M216_TB/DUT" for synthesis
+################################################################################
+set_design_top ./test/M216A_TB/DUT
+
+
+#####
+# Create Power Domains
+################################################################################
+
+create_power_domain Domain_1 -elements {M216A_TopModule}
+create_power_domain Domain_2 -elements {latency}
+create_power_domain Domain_3 -elements {height_to_id}
+create_power_domain Domain_4 -elements {least_strip}
+create_power_domain Domain_5 -elements {strip_id_to_y}
+create_power_domain Domain_6 -elements {p1_reg}
+
+
+#####
+# Create VDD/
+####################
+create_supply_port VDD
+create_supply_net  VDD
+create_supply_net  VDD -domain Domain_1 -reuse
+create_supply_net  VDD -domain Domain_2 -reuse
+create_supply_net  VDD -domain Domain_3 -reuse
+create_supply_net  VDD -domain Domain_4 -reuse
+create_supply_net  VDD -domain Domain_5 -reuse
+create_supply_net  VDD -domain Domain_5 -reuse
+connect_supply_net VDD -ports {VDD}
+
+#####
+# Create VSS
+####################
+create_supply_port VSS
+create_supply_net  VSS
+create_supply_net  VSS -domain Domain_1 -reuse
+create_supply_net  VSS -domain Domain_2 -reuse
+create_supply_net  VSS -domain Domain_3 -reuse
+create_supply_net  VSS -domain Domain_4 -reuse
+create_supply_net  VSS -domain Domain_5 -reuse
+create_supply_net  VSS -domain Domain_5 -reuse
+connect_supply_net VSS -ports {VSS}
+
+
+
+
+
+
+#####
+# Create OTHER power nets
+####################
+create_supply_net  Vtop		-domain Domain_1
+create_supply_net  Vlat		-domain Domain_2
+create_supply_net  Vhid     -domain Domain_3
+create_supply_net  Vls		-domain Domain_4
+create_supply_net  Vsidy	-domain Domain_5
+create_supply_net  Vp1r     -domain Domain_6
+
+
+#####
+# Set Primary Supply Nets for PDs
+################################################################################
+set_domain_supply_net Domain_1 -primary_power_net Vtop		-primary_ground_net VSS
+set_domain_supply_net Domain_2 -primary_power_net Vlat		-primary_ground_net VSS
+set_domain_supply_net Domain_3 -primary_power_net Vhid		-primary_ground_net VSS
+set_domain_supply_net Domain_4 -primary_power_net Vls		-primary_ground_net VSS
+set_domain_supply_net Domain_5 -primary_power_net Vsidy		-primary_ground_net VSS
+set_domain_supply_net Domain_5 -primary_power_net Vp1r		-primary_ground_net VSS
+
+
+# M216A_TopModule.v
+####################
+create_power_switch TopModule_SW \
+ -domain Domain_1 \
+ -input_supply_port  {vin1		VDD} \
+ -output_supply_port {vout1    Vtop} \
+ -control_port       {ctr_sig1 tm_sw_ctr} \
+ -on_state           {TM_ON vin1 {!ctr_sig1}} \
+ -off_state          {TM_OFF   {ctr_sig1}}
+
+#####
+# (2) latency.v
+####################
+create_power_switch latency_SW \
+ -domain Domain_2 \
+ -input_supply_port  {vin2     VDD} \
+ -output_supply_port {vout2    Vlat} \
+ -control_port       {ctr_sig2 lat_sw_ctr} \
+ -on_state           {LAT_ON vin2 {!ctr_sig2}} \
+ -off_state          {LAT_OFF   {ctr_sig2}}
+
+#####
+# (3) height_to_id.v
+####################
+create_power_switch height_to_id_SW \
+ -domain Domain_3 \
+ -input_supply_port  {vin3     VDD} \
+ -output_supply_port {vout3    Vhid} \
+ -control_port       {ctr_sig3 hid_sw_ctr} \
+ -on_state           {HID_ON vin3 {!ctr_sig3}} \
+ -off_state          {HID_OFF   {ctr_sig3}}
+
+####################
+# (4) least_strip.v 
+####################
+create_power_switch least_strip_SW \
+ -domain Domain_4 \
+ -input_supply_port  {vin4     VDD} \
+ -output_supply_port {vout4    Vls} \
+ -control_port       {ctr_sig3 ls_sw_ctr} \
+ -on_state           {LS_ON vin4 {!ctr_sig4}} \
+ -off_state          {LS_OFF   {ctr_sig4}}
+
+#####
+# (5) strip_id_to_y.v
+####################
+create_power_switch strip_id_to_y_SW \
+ -domain Domain_5 \
+ -input_supply_port  {vin5     VDD} \
+ -output_supply_port {vout5    Vsidy} \
+ -control_port       {ctr_sig5 sidy_sw_ctr} \
+ -on_state           {SIDY_ON vin5 {!ctr_sig5}} \
+ -off_state          {SIDY_OFF {ctr_sig5}}
+
+ #####
+# (6) p1_reg.v
+####################
+create_power_switch p1_reg_SW \
+ -domain Domain_6 \
+ -input_supply_port  {vin6     VDD} \
+ -output_supply_port {vout6    Vp1r} \
+ -control_port       {ctr_sig6 p1r_sw_ctr} \
+ -on_state           {P1R_ON vin6 {!ctr_sig6}} \
+ -off_state          {P1R_OFF {ctr_sig6}}
+
