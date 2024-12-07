@@ -1,0 +1,52 @@
+Loading db file '/w/apps2/public.2/tech/synopsys/32-28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_ff1p16vn40c.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : M216A_TopModule
+Version: M-2016.12-SP2
+Date   : Sat Dec  7 00:10:34 2024
+****************************************
+
+
+Library(s) Used:
+
+    saed32rvt_ff1p16vn40c (File: /w/apps2/public.2/tech/synopsys/32-28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_ff1p16vn40c.db)
+
+
+Operating Conditions: ss0p95v125c   Library: saed32rvt_ss0p95v125c
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+M216A_TopModule        8000              saed32rvt_ff1p16vn40c
+M216A_TopModule_DW01_cmp6_0
+                       ForQA             saed32rvt_ff1p16vn40c
+M216A_TopModule_DW01_cmp6_1
+                       ForQA             saed32rvt_ff1p16vn40c
+M216A_TopModule_DW01_cmp6_2
+                       ForQA             saed32rvt_ff1p16vn40c
+
+
+Global Operating Voltage = 0.95 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ns
+    Dynamic Power Units = 1uW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+M216A_TopModule                          86.808 3.63e+03 6.73e+09 1.04e+04 100.0
+  r535 (M216A_TopModule_DW01_cmp6_2)      1.139    6.672 2.00e+08  208.303   2.0
+  r536 (M216A_TopModule_DW01_cmp6_1)      1.178    6.804 1.96e+08  204.168   2.0
+  r537 (M216A_TopModule_DW01_cmp6_0)      0.927    6.091 2.43e+08  249.654   2.4
+1

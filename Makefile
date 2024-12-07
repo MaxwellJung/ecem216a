@@ -4,7 +4,7 @@ BUILD_DIR := ./build
 SIM_DIR := $(BUILD_DIR)/sim
 WORK_DIR := ./WORK
 
-all: rect_fill_sim
+all: synth
 
 synth: FORCE
 	dc_shell -f script/synthesis.tcl

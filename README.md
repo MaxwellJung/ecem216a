@@ -6,13 +6,27 @@
     ```console
     git clone https://github.com/MaxwellJung/ecem216a.git
     ```
-2. Change working directory (rename `ecem216a` if you want)
+2. Change working directory into cloned repo (rename `ecem216a` if you want)
     ```console
     cd ecem216a
     ```
-3. Open Modelsim Project
+3. Source ECE M216A tool-setup
     ```console
-    vsim final_modelsim.mpf &
+    tcsh
+    ```
+    ```console
+    source {path/to/ece-m216a-tool-setup}
+    ```
+4. Synthesize Project  
+    ```console
+    make
+    ```
+    This will create a `build/` directory for the synthesis outputs.  
+    `build/report` contains design reports for power, area, timing, etc.  
+    `build/synth` contains the .vg and .sdf files.
+5. Open Modelsim Project for gate-level simulation
+    ```console
+    vsim gate-level.mpf &
     ```
 
 ## Pulling changes

@@ -1,0 +1,509 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 10
+Design : M216A_TopModule
+Version: M-2016.12-SP2
+Date   : Sat Dec  7 00:10:33 2024
+****************************************
+
+Operating Conditions: ss0p95v125c   Library: saed32rvt_ss0p95v125c
+Wire Load Model Mode: enclosed
+
+  Startpoint: strip_id_2_reg_reg[3]
+              (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: least_strip_0/id_2_smallest_reg_reg
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+  M216A_TopModule_DW01_cmp6_1
+                     ForQA                 saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  strip_id_2_reg_reg[3]/CLK (DFFX1_RVT)                0.00000    0.00000 r
+  strip_id_2_reg_reg[3]/QN (DFFX1_RVT)                 0.04512    0.04512 r
+  U1901/Y (INVX2_RVT)                                  0.02237    0.06748 f
+  U1933/Y (AND3X1_RVT)                                 0.05236    0.11985 f
+  U1736/Y (AO22X1_RVT)                                 0.01944    0.13929 f
+  U1735/Y (AO221X1_RVT)                                0.01722    0.15651 f
+  U1729/Y (AO221X1_RVT)                                0.03396    0.19047 f
+  r536/B[1] (M216A_TopModule_DW01_cmp6_1)              0.00000    0.19047 f
+  r536/U1/Y (INVX1_RVT)                                0.01159    0.20206 r
+  r536/U57/Y (XOR2X1_RVT)                              0.03732    0.23938 f
+  r536/ULTI1_1/Y (NAND2X0_RVT)                         0.01433    0.25371 r
+  r536/ULTI2_1/Y (NAND2X0_RVT)                         0.01099    0.26470 f
+  r536/ULTI1_2/Y (NAND2X0_RVT)                         0.01520    0.27990 r
+  r536/ULTI2_2/Y (NAND2X0_RVT)                         0.01095    0.29085 f
+  r536/ULTI1_3/Y (NAND2X0_RVT)                         0.01594    0.30679 r
+  r536/U51/Y (NAND2X0_RVT)                             0.01172    0.31851 f
+  r536/U15/Y (NAND2X0_RVT)                             0.01525    0.33376 r
+  r536/U10/Y (OR2X1_RVT)                               0.01963    0.35340 r
+  r536/U2/Y (AND2X1_RVT)                               0.01480    0.36819 r
+  r536/GE (M216A_TopModule_DW01_cmp6_1)                0.00000    0.36819 r
+  U1992/Y (AND2X1_RVT)                                 0.01489    0.38309 r
+  U1993/Y (AND2X1_RVT)                                 0.01488    0.39797 r
+  least_strip_0/id_2_smallest_reg_reg/D (DFFX1_RVT)    0.00000    0.39797 r
+  data arrival time                                               0.39797
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  least_strip_0/id_2_smallest_reg_reg/CLK (DFFX1_RVT)  0.00000    0.41400 r
+  library setup time                                  -0.01496    0.39904
+  data required time                                              0.39904
+  --------------------------------------------------------------------------
+  data required time                                              0.39904
+  data arrival time                                              -0.39797
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.00107
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: index_y_o_reg_reg[5]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk_i (rise edge)               0.00000    0.00000
+  clock network delay (ideal)           0.00000    0.00000
+  input external delay                  0.03450    0.03450 r
+  width_i[3] (in)                       0.00000    0.03450 r
+  U1670/Y (OR2X1_RVT)                   0.01709    0.05159 r
+  U1985/Y (OR4X1_RVT)                   0.03800    0.08959 r
+  U1612/Y (AO21X1_RVT)                  0.03015    0.11974 r
+  U1909/Y (NAND2X0_RVT)                 0.01455    0.13429 f
+  U1990/Y (XNOR2X1_RVT)                 0.03938    0.17367 r
+  U1999/Y (NOR4X1_RVT)                  0.04062    0.21430 f
+  U1608/Y (NAND2X0_RVT)                 0.01959    0.23388 r
+  U1989/Y (INVX1_RVT)                   0.00538    0.23926 f
+  U1908/Y (NAND2X0_RVT)                 0.02349    0.26275 r
+  U1906/Y (INVX1_RVT)                   0.02687    0.28963 f
+  U1593/Y (NAND3X0_RVT)                 0.02092    0.31055 r
+  U1591/Y (OAI22X1_RVT)                 0.02963    0.34018 f
+  U1590/Y (AO21X1_RVT)                  0.01625    0.35643 f
+  U1984/Y (INVX1_RVT)                   0.00637    0.36281 r
+  U1585/Y (OA22X1_RVT)                  0.02160    0.38440 r
+  U1584/Y (NAND3X0_RVT)                 0.01440    0.39880 f
+  index_y_o_reg_reg[5]/D (DFFX1_RVT)    0.00000    0.39880 f
+  data arrival time                                0.39880
+
+  clock clk_i (rise edge)               0.46000    0.46000
+  clock network delay (ideal)           0.00000    0.46000
+  clock uncertainty                    -0.04600    0.41400
+  index_y_o_reg_reg[5]/CLK (DFFX1_RVT)  0.00000    0.41400 r
+  library setup time                   -0.01335    0.40065
+  data required time                               0.40065
+  -----------------------------------------------------------
+  data required time                               0.40065
+  data arrival time                               -0.39880
+  -----------------------------------------------------------
+  slack (MET)                                      0.00185
+
+
+  Startpoint: strip_id_2_reg_reg[3]
+              (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: least_strip_0/id_0_smallest_reg_reg
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+  M216A_TopModule_DW01_cmp6_1
+                     ForQA                 saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  strip_id_2_reg_reg[3]/CLK (DFFX1_RVT)                0.00000    0.00000 r
+  strip_id_2_reg_reg[3]/QN (DFFX1_RVT)                 0.04512    0.04512 r
+  U1901/Y (INVX2_RVT)                                  0.02237    0.06748 f
+  U1933/Y (AND3X1_RVT)                                 0.05236    0.11985 f
+  U1736/Y (AO22X1_RVT)                                 0.01944    0.13929 f
+  U1735/Y (AO221X1_RVT)                                0.01722    0.15651 f
+  U1729/Y (AO221X1_RVT)                                0.03396    0.19047 f
+  r536/B[1] (M216A_TopModule_DW01_cmp6_1)              0.00000    0.19047 f
+  r536/U1/Y (INVX1_RVT)                                0.01159    0.20206 r
+  r536/U57/Y (XOR2X1_RVT)                              0.03732    0.23938 f
+  r536/UGTI1_1/Y (NAND2X0_RVT)                         0.01573    0.25511 r
+  r536/U7/Y (NAND2X0_RVT)                              0.01209    0.26721 f
+  r536/U8/Y (AND2X1_RVT)                               0.01751    0.28471 f
+  r536/UGTI1_3/Y (NAND2X0_RVT)                         0.01307    0.29778 r
+  r536/UGTI2_3/Y (NAND2X0_RVT)                         0.01156    0.30934 f
+  r536/UGTI1_4/Y (NAND2X0_RVT)                         0.01525    0.32458 r
+  r536/U53/Y (NAND2X0_RVT)                             0.01172    0.33630 f
+  r536/UGTI1_6/Y (NAND2X0_RVT)                         0.01485    0.35115 r
+  r536/U12/Y (NAND2X0_RVT)                             0.01172    0.36287 f
+  r536/U13/Y (NAND2X0_RVT)                             0.01303    0.37589 r
+  r536/LE (M216A_TopModule_DW01_cmp6_1)                0.00000    0.37589 r
+  U1643/Y (AND3X1_RVT)                                 0.01919    0.39508 r
+  least_strip_0/id_0_smallest_reg_reg/D (DFFX1_RVT)    0.00000    0.39508 r
+  data arrival time                                               0.39508
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  least_strip_0/id_0_smallest_reg_reg/CLK (DFFX1_RVT)  0.00000    0.41400 r
+  library setup time                                  -0.01498    0.39902
+  data required time                                              0.39902
+  --------------------------------------------------------------------------
+  data required time                                              0.39902
+  data arrival time                                              -0.39508
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.00394
+
+
+  Startpoint: strip_id_2_reg_reg[3]
+              (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: least_strip_0/id_1_smallest_reg_reg
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+  M216A_TopModule_DW01_cmp6_0
+                     ForQA                 saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  strip_id_2_reg_reg[3]/CLK (DFFX1_RVT)                0.00000    0.00000 r
+  strip_id_2_reg_reg[3]/QN (DFFX1_RVT)                 0.04512    0.04512 r
+  U1901/Y (INVX2_RVT)                                  0.02237    0.06748 f
+  U1933/Y (AND3X1_RVT)                                 0.05236    0.11985 f
+  U1736/Y (AO22X1_RVT)                                 0.01944    0.13929 f
+  U1735/Y (AO221X1_RVT)                                0.01722    0.15651 f
+  U1729/Y (AO221X1_RVT)                                0.03396    0.19047 f
+  r537/B[1] (M216A_TopModule_DW01_cmp6_0)              0.00000    0.19047 f
+  r537/U15/Y (INVX0_RVT)                               0.01459    0.20506 r
+  r537/U10/Y (XOR2X1_RVT)                              0.03770    0.24276 f
+  r537/UGTI1_1/Y (NAND2X0_RVT)                         0.01488    0.25764 r
+  r537/U37/Y (NAND2X0_RVT)                             0.01209    0.26973 f
+  r537/U38/Y (AND2X1_RVT)                              0.01768    0.28741 f
+  r537/U11/Y (NAND2X0_RVT)                             0.01312    0.30053 r
+  r537/U12/Y (AND2X1_RVT)                              0.01540    0.31593 r
+  r537/U53/Y (NAND2X0_RVT)                             0.01262    0.32855 f
+  r537/U52/Y (OR2X1_RVT)                               0.01494    0.34349 f
+  r537/U28/Y (NAND2X0_RVT)                             0.01305    0.35654 r
+  r537/U6/Y (AND2X1_RVT)                               0.01464    0.37118 r
+  r537/LE (M216A_TopModule_DW01_cmp6_0)                0.00000    0.37118 r
+  U1642/Y (AND3X1_RVT)                                 0.01934    0.39052 r
+  least_strip_0/id_1_smallest_reg_reg/D (DFFX1_RVT)    0.00000    0.39052 r
+  data arrival time                                               0.39052
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  least_strip_0/id_1_smallest_reg_reg/CLK (DFFX1_RVT)  0.00000    0.41400 r
+  library setup time                                  -0.01497    0.39903
+  data required time                                              0.39903
+  --------------------------------------------------------------------------
+  data required time                                              0.39903
+  data arrival time                                              -0.39052
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.00851
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: strip_widths_reg[1][7]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  input external delay                                 0.03450    0.03450 f
+  width_i[3] (in)                                      0.00000    0.03450 f
+  U1670/Y (OR2X1_RVT)                                  0.01438    0.04888 f
+  U1985/Y (OR4X1_RVT)                                  0.03480    0.08368 f
+  U1612/Y (AO21X1_RVT)                                 0.02755    0.11123 f
+  U1611/Y (NAND2X0_RVT)                                0.01739    0.12862 r
+  U1991/Y (XOR2X1_RVT)                                 0.04144    0.17006 f
+  U1999/Y (NOR4X1_RVT)                                 0.03295    0.20302 r
+  U1608/Y (NAND2X0_RVT)                                0.01917    0.22219 f
+  U1989/Y (INVX1_RVT)                                  0.00789    0.23008 r
+  U1908/Y (NAND2X0_RVT)                                0.02312    0.25319 f
+  U1906/Y (INVX1_RVT)                                  0.02713    0.28032 r
+  U1575/Y (NAND3X0_RVT)                                0.01940    0.29973 f
+  U1574/Y (AND2X1_RVT)                                 0.02312    0.32285 f
+  U1918/Y (AO21X1_RVT)                                 0.02649    0.34934 f
+  U1915/Y (INVX1_RVT)                                  0.01944    0.36879 r
+  U1448/Y (AO22X1_RVT)                                 0.02050    0.38928 r
+  strip_widths_reg[1][7]/D (DFFX1_RVT)                 0.00000    0.38928 r
+  data arrival time                                               0.38928
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  strip_widths_reg[1][7]/CLK (DFFX1_RVT)               0.00000    0.41400 r
+  library setup time                                  -0.01499    0.39901
+  data required time                                              0.39901
+  --------------------------------------------------------------------------
+  data required time                                              0.39901
+  data arrival time                                              -0.38928
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.00973
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: strip_widths_reg[1][1]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  input external delay                                 0.03450    0.03450 f
+  width_i[3] (in)                                      0.00000    0.03450 f
+  U1670/Y (OR2X1_RVT)                                  0.01438    0.04888 f
+  U1985/Y (OR4X1_RVT)                                  0.03480    0.08368 f
+  U1612/Y (AO21X1_RVT)                                 0.02755    0.11123 f
+  U1611/Y (NAND2X0_RVT)                                0.01739    0.12862 r
+  U1991/Y (XOR2X1_RVT)                                 0.04144    0.17006 f
+  U1999/Y (NOR4X1_RVT)                                 0.03295    0.20302 r
+  U1608/Y (NAND2X0_RVT)                                0.01917    0.22219 f
+  U1989/Y (INVX1_RVT)                                  0.00789    0.23008 r
+  U1908/Y (NAND2X0_RVT)                                0.02312    0.25319 f
+  U1906/Y (INVX1_RVT)                                  0.02713    0.28032 r
+  U1575/Y (NAND3X0_RVT)                                0.01940    0.29973 f
+  U1574/Y (AND2X1_RVT)                                 0.02312    0.32285 f
+  U1918/Y (AO21X1_RVT)                                 0.02649    0.34934 f
+  U1915/Y (INVX1_RVT)                                  0.01944    0.36879 r
+  U1442/Y (AO22X1_RVT)                                 0.02012    0.38891 r
+  strip_widths_reg[1][1]/D (DFFX1_RVT)                 0.00000    0.38891 r
+  data arrival time                                               0.38891
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  strip_widths_reg[1][1]/CLK (DFFX1_RVT)               0.00000    0.41400 r
+  library setup time                                  -0.01499    0.39901
+  data required time                                              0.39901
+  --------------------------------------------------------------------------
+  data required time                                              0.39901
+  data arrival time                                              -0.38891
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.01010
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: strip_widths_reg[1][0]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  input external delay                                 0.03450    0.03450 f
+  width_i[3] (in)                                      0.00000    0.03450 f
+  U1670/Y (OR2X1_RVT)                                  0.01438    0.04888 f
+  U1985/Y (OR4X1_RVT)                                  0.03480    0.08368 f
+  U1612/Y (AO21X1_RVT)                                 0.02755    0.11123 f
+  U1611/Y (NAND2X0_RVT)                                0.01739    0.12862 r
+  U1991/Y (XOR2X1_RVT)                                 0.04144    0.17006 f
+  U1999/Y (NOR4X1_RVT)                                 0.03295    0.20302 r
+  U1608/Y (NAND2X0_RVT)                                0.01917    0.22219 f
+  U1989/Y (INVX1_RVT)                                  0.00789    0.23008 r
+  U1908/Y (NAND2X0_RVT)                                0.02312    0.25319 f
+  U1906/Y (INVX1_RVT)                                  0.02713    0.28032 r
+  U1575/Y (NAND3X0_RVT)                                0.01940    0.29973 f
+  U1574/Y (AND2X1_RVT)                                 0.02312    0.32285 f
+  U1918/Y (AO21X1_RVT)                                 0.02649    0.34934 f
+  U1915/Y (INVX1_RVT)                                  0.01944    0.36879 r
+  U1441/Y (AO22X1_RVT)                                 0.02012    0.38891 r
+  strip_widths_reg[1][0]/D (DFFX1_RVT)                 0.00000    0.38891 r
+  data arrival time                                               0.38891
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  strip_widths_reg[1][0]/CLK (DFFX1_RVT)               0.00000    0.41400 r
+  library setup time                                  -0.01499    0.39901
+  data required time                                              0.39901
+  --------------------------------------------------------------------------
+  data required time                                              0.39901
+  data arrival time                                              -0.38891
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.01010
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: strip_widths_reg[1][4]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  input external delay                                 0.03450    0.03450 f
+  width_i[3] (in)                                      0.00000    0.03450 f
+  U1670/Y (OR2X1_RVT)                                  0.01438    0.04888 f
+  U1985/Y (OR4X1_RVT)                                  0.03480    0.08368 f
+  U1612/Y (AO21X1_RVT)                                 0.02755    0.11123 f
+  U1611/Y (NAND2X0_RVT)                                0.01739    0.12862 r
+  U1991/Y (XOR2X1_RVT)                                 0.04144    0.17006 f
+  U1999/Y (NOR4X1_RVT)                                 0.03295    0.20302 r
+  U1608/Y (NAND2X0_RVT)                                0.01917    0.22219 f
+  U1989/Y (INVX1_RVT)                                  0.00789    0.23008 r
+  U1908/Y (NAND2X0_RVT)                                0.02312    0.25319 f
+  U1906/Y (INVX1_RVT)                                  0.02713    0.28032 r
+  U1575/Y (NAND3X0_RVT)                                0.01940    0.29973 f
+  U1574/Y (AND2X1_RVT)                                 0.02312    0.32285 f
+  U1918/Y (AO21X1_RVT)                                 0.02649    0.34934 f
+  U1915/Y (INVX1_RVT)                                  0.01944    0.36879 r
+  U1445/Y (AO22X1_RVT)                                 0.02012    0.38891 r
+  strip_widths_reg[1][4]/D (DFFX1_RVT)                 0.00000    0.38891 r
+  data arrival time                                               0.38891
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  strip_widths_reg[1][4]/CLK (DFFX1_RVT)               0.00000    0.41400 r
+  library setup time                                  -0.01499    0.39901
+  data required time                                              0.39901
+  --------------------------------------------------------------------------
+  data required time                                              0.39901
+  data arrival time                                              -0.38891
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.01010
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: strip_widths_reg[1][3]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  input external delay                                 0.03450    0.03450 f
+  width_i[3] (in)                                      0.00000    0.03450 f
+  U1670/Y (OR2X1_RVT)                                  0.01438    0.04888 f
+  U1985/Y (OR4X1_RVT)                                  0.03480    0.08368 f
+  U1612/Y (AO21X1_RVT)                                 0.02755    0.11123 f
+  U1611/Y (NAND2X0_RVT)                                0.01739    0.12862 r
+  U1991/Y (XOR2X1_RVT)                                 0.04144    0.17006 f
+  U1999/Y (NOR4X1_RVT)                                 0.03295    0.20302 r
+  U1608/Y (NAND2X0_RVT)                                0.01917    0.22219 f
+  U1989/Y (INVX1_RVT)                                  0.00789    0.23008 r
+  U1908/Y (NAND2X0_RVT)                                0.02312    0.25319 f
+  U1906/Y (INVX1_RVT)                                  0.02713    0.28032 r
+  U1575/Y (NAND3X0_RVT)                                0.01940    0.29973 f
+  U1574/Y (AND2X1_RVT)                                 0.02312    0.32285 f
+  U1918/Y (AO21X1_RVT)                                 0.02649    0.34934 f
+  U1915/Y (INVX1_RVT)                                  0.01944    0.36879 r
+  U1444/Y (AO22X1_RVT)                                 0.02012    0.38891 r
+  strip_widths_reg[1][3]/D (DFFX1_RVT)                 0.00000    0.38891 r
+  data arrival time                                               0.38891
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  strip_widths_reg[1][3]/CLK (DFFX1_RVT)               0.00000    0.41400 r
+  library setup time                                  -0.01499    0.39901
+  data required time                                              0.39901
+  --------------------------------------------------------------------------
+  data required time                                              0.39901
+  data arrival time                                              -0.38891
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.01010
+
+
+  Startpoint: width_i[3] (input port clocked by clk_i)
+  Endpoint: strip_widths_reg[1][2]
+            (rising edge-triggered flip-flop clocked by clk_i)
+  Path Group: clk_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  M216A_TopModule    8000                  saed32rvt_ff1p16vn40c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_i (rise edge)                              0.00000    0.00000
+  clock network delay (ideal)                          0.00000    0.00000
+  input external delay                                 0.03450    0.03450 f
+  width_i[3] (in)                                      0.00000    0.03450 f
+  U1670/Y (OR2X1_RVT)                                  0.01438    0.04888 f
+  U1985/Y (OR4X1_RVT)                                  0.03480    0.08368 f
+  U1612/Y (AO21X1_RVT)                                 0.02755    0.11123 f
+  U1611/Y (NAND2X0_RVT)                                0.01739    0.12862 r
+  U1991/Y (XOR2X1_RVT)                                 0.04144    0.17006 f
+  U1999/Y (NOR4X1_RVT)                                 0.03295    0.20302 r
+  U1608/Y (NAND2X0_RVT)                                0.01917    0.22219 f
+  U1989/Y (INVX1_RVT)                                  0.00789    0.23008 r
+  U1908/Y (NAND2X0_RVT)                                0.02312    0.25319 f
+  U1906/Y (INVX1_RVT)                                  0.02713    0.28032 r
+  U1575/Y (NAND3X0_RVT)                                0.01940    0.29973 f
+  U1574/Y (AND2X1_RVT)                                 0.02312    0.32285 f
+  U1918/Y (AO21X1_RVT)                                 0.02649    0.34934 f
+  U1915/Y (INVX1_RVT)                                  0.01944    0.36879 r
+  U1443/Y (AO22X1_RVT)                                 0.02012    0.38891 r
+  strip_widths_reg[1][2]/D (DFFX1_RVT)                 0.00000    0.38891 r
+  data arrival time                                               0.38891
+
+  clock clk_i (rise edge)                              0.46000    0.46000
+  clock network delay (ideal)                          0.00000    0.46000
+  clock uncertainty                                   -0.04600    0.41400
+  strip_widths_reg[1][2]/CLK (DFFX1_RVT)               0.00000    0.41400 r
+  library setup time                                  -0.01499    0.39901
+  data required time                                              0.39901
+  --------------------------------------------------------------------------
+  data required time                                              0.39901
+  data arrival time                                              -0.38891
+  --------------------------------------------------------------------------
+  slack (MET)                                                     0.01010
+
+
+1
