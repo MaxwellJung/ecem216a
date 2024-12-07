@@ -17,5 +17,3 @@ set IN_DEL_MIN [expr 0.0375*${TCLK}]
 set OUT_DEL [expr 0.075*${TCLK}]
 # 3.75% of TCLK
 set OUT_DEL_MIN [expr 0.0375*${TCLK}]
-
-set SIG_FIGS 5
