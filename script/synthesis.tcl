@@ -54,21 +54,6 @@ compile -only_hold_time
 # set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
 # remove_unconnected_ports -blast_buses [get_cells -hier]
 
-# Get reports
-file mkdir ${REPORT_DIR}/${DESIGN_NAME}
-report_timing -path full -delay min -max_paths 10 -significant_digits ${SIG_FIGS} > ${REPORT_DIR}/${DESIGN_NAME}/design.holdtiming
-report_timing -path full -delay max -max_paths 10 -significant_digits ${SIG_FIGS} > ${REPORT_DIR}/${DESIGN_NAME}/design.setuptiming
-report_area -hierarchy > ${REPORT_DIR}/${DESIGN_NAME}/design.area
-report_power -hier -hier_level 2 > ${REPORT_DIR}/${DESIGN_NAME}/design.power
-report_resources > ${REPORT_DIR}/${DESIGN_NAME}/design.resources
-report_constraint -verbose > ${REPORT_DIR}/${DESIGN_NAME}/design.constraint
-check_design > ${REPORT_DIR}/${DESIGN_NAME}/design.check_design
-check_timing > ${REPORT_DIR}/${DESIGN_NAME}/design.check_timing
+source ./script/report.tcl
 
-file mkdir ${SYNTH_DIR}/${DESIGN_NAME}
-write -hierarchy -format verilog -output ${SYNTH_DIR}/${DESIGN_NAME}.vg
-write_sdf -version 1.0 -context verilog ${SYNTH_DIR}/${DESIGN_NAME}.sdf
-set_propagated_clock [all_clocks]
-write_sdc ${SYNTH_DIR}/${DESIGN_NAME}.sdc
-
-exit
+source ./script/export.tcl
